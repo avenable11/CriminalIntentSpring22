@@ -66,4 +66,9 @@ class CrimeDetailFragment : Fragment() {
         const val ARG_ITEM_ID = "item_id"
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }
