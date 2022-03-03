@@ -16,6 +16,7 @@ import edu.ivytech.criminalintentspring22.databinding.ListItemCrimeBinding
 class CrimeListFragment : Fragment() {
     private var _binding: FragmentCrimeListBinding? = null
     private val binding get() = _binding!!
+    private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +26,16 @@ class CrimeListFragment : Fragment() {
         _binding = FragmentCrimeListBinding.inflate(inflater, container, false)
         binding.crimeList.layoutManager = LinearLayoutManager(context)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = CrimeAdapter(CrimeList.ITEMS)
+        binding.crimeList.adapter = adapter
     }
 
     private inner class CrimeHolder (val itemBinding:ListItemCrimeBinding) :
