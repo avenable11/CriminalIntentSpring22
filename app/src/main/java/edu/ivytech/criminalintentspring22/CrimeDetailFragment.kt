@@ -1,9 +1,11 @@
 package edu.ivytech.criminalintentspring22
 
+import android.content.ClipData
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +26,15 @@ class CrimeDetailFragment : Fragment() {
             }
         }
     }
-
+    private val dragListener = View.OnDragListener { v, event ->
+        if(event.action == DragEvent.ACTION_DROP) {
+            val clipDataItem:ClipData.Item = event.clipData.getItemAt(0)
+            val dragData = clipDataItem.text
+            item = CrimeList.ITEM_MAP[UUID.fromString(dragData.toString())]
+            updateUI()
+        }
+        true
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,7 +42,7 @@ class CrimeDetailFragment : Fragment() {
     ): View {
         _binding = FragmentCrimeDetailBinding.inflate(inflater, container, false)
         updateUI()
-
+        binding.root.setOnDragListener(dragListener)
         return binding.root
     }
 

@@ -1,7 +1,11 @@
 package edu.ivytech.criminalintentspring22
 
+import android.content.ClipData
+import android.content.ClipDescription
+import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +36,13 @@ class CrimeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.addCrimeBtn?.setOnClickListener {
-            view.findNavController().navigate(R.id.action_List_to_Detail)
+            if(binding.itemDetailNavContainer != null){
+                val bundle = Bundle()
+                bundle.putString("title", "New Crime")
+                view.findNavController().navigate(R.id.action_List_to_Detail, bundle)
+            } else {
+                view.findNavController().navigate(R.id.action_List_to_Detail)
+            }
         }
         setupRecyclerView()
     }
@@ -43,10 +53,27 @@ class CrimeListFragment : Fragment() {
     }
 
     private inner class CrimeHolder (val itemBinding:ListItemCrimeBinding) :
-        RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener {
+        RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener, View.OnCreateContextMenuListener {
             private lateinit var crime : Crime
             init {
                 itemBinding.root.setOnClickListener(this)
+                if(binding.itemDetailNavContainer != null) {
+                    itemBinding.root.setOnLongClickListener { v ->
+                        val clipItem = ClipData.Item(crime.id.toString())
+                        val dragData = ClipData(
+                            v.tag as? CharSequence,
+                            arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                            clipItem
+                        )
+                        if (Build.VERSION.SDK_INT >= 24) {
+                            v.startDragAndDrop(dragData, View.DragShadowBuilder(v), null, 0)
+                        } else {
+                            v.startDrag(dragData, View.DragShadowBuilder(v), null, 0)
+                        }
+                    }
+                } else {
+                    itemBinding.root.setOnCreateContextMenuListener(this)
+                }
             }
             fun bind(crime: Crime) {
                 this.crime = crime
@@ -63,6 +90,17 @@ class CrimeListFragment : Fragment() {
                 binding.itemDetailNavContainer!!.findNavController().navigate(R.id.crimeDetailFragment2, bundle)
             } else {
                 itemView.findNavController().navigate(R.id.action_List_to_Detail, bundle)
+            }
+        }
+
+        override fun onCreateContextMenu(
+            menu: ContextMenu?,
+            v: View?,
+            menuInfo: ContextMenu.ContextMenuInfo?
+        ) {
+            menu?.add("Context Menu Item")?.setOnMenuItemClickListener {
+                Toast.makeText(context, "Clicked Context Menu Item ${crime.title}", Toast.LENGTH_SHORT).show()
+                true
             }
         }
     }
