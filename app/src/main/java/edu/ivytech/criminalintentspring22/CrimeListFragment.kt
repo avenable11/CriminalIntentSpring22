@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeListBinding
@@ -53,6 +54,9 @@ class CrimeListFragment : Fragment() {
 
         override fun onClick(v: View?) {
             Toast.makeText(context, "${crime.title} pressed", Toast.LENGTH_SHORT).show()
+            val bundle = Bundle()
+            bundle.putSerializable(CrimeDetailFragment.ARG_ITEM_ID, crime.id)
+            itemView.findNavController().navigate(R.id.action_List_to_Detail, bundle)
         }
     }
     private inner class CrimeAdapter(var crimes : List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
