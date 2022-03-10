@@ -5,7 +5,7 @@ import java.util.*
 object CrimeList {
     val ITEMS: MutableList<Crime> = ArrayList()
     val ITEM_MAP: MutableMap<UUID, Crime> = HashMap()
-    private const val COUNT = 100
+    private const val COUNT = 10
     init {
         for(i in 1 .. COUNT)
         {

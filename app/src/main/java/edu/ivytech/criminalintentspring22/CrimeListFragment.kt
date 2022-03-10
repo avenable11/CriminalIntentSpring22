@@ -31,6 +31,9 @@ class CrimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.addCrimeBtn.setOnClickListener {
+            view.findNavController().navigate(R.id.action_List_to_Detail)
+        }
         setupRecyclerView()
     }
 

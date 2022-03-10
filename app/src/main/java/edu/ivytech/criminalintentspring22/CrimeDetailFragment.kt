@@ -58,6 +58,7 @@ class CrimeDetailFragment : Fragment() {
             binding.toolbarLayout.title = "New Crime"
             item = Crime()
             CrimeList.ITEM_MAP[item!!.id] = item!!
+            CrimeList.ITEMS.add(item!!)
         }
         binding.dateButton.text = DateFormat.format("EEEE, MMM dd, yyyy",item?.date)
 
