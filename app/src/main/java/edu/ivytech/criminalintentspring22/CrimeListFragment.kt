@@ -31,7 +31,7 @@ class CrimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.addCrimeBtn.setOnClickListener {
+        binding.addCrimeBtn?.setOnClickListener {
             view.findNavController().navigate(R.id.action_List_to_Detail)
         }
         setupRecyclerView()
@@ -59,7 +59,11 @@ class CrimeListFragment : Fragment() {
             Toast.makeText(context, "${crime.title} pressed", Toast.LENGTH_SHORT).show()
             val bundle = Bundle()
             bundle.putSerializable(CrimeDetailFragment.ARG_ITEM_ID, crime.id)
-            itemView.findNavController().navigate(R.id.action_List_to_Detail, bundle)
+            if(binding.itemDetailNavContainer != null){
+                binding.itemDetailNavContainer!!.findNavController().navigate(R.id.crimeDetailFragment2, bundle)
+            } else {
+                itemView.findNavController().navigate(R.id.action_List_to_Detail, bundle)
+            }
         }
     }
     private inner class CrimeAdapter(var crimes : List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {

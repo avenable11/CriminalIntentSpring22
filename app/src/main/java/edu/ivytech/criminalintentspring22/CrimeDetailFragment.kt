@@ -51,11 +51,11 @@ class CrimeDetailFragment : Fragment() {
     private fun updateUI()
     {
         if(item != null){
-            binding.toolbarLayout.title = "Edit Crime"
+            binding.toolbarLayout?.title = "Edit Crime"
             binding.titleEditText.setText(item?.title)
             binding.solvedSwitch.isChecked = item?.isSolved == true
         } else {
-            binding.toolbarLayout.title = "New Crime"
+            binding.toolbarLayout?.title = "New Crime"
             item = Crime()
             CrimeList.ITEM_MAP[item!!.id] = item!!
             CrimeList.ITEMS.add(item!!)

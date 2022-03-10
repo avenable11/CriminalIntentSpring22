@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout-land/fragment_crime_detail.xml" value="0.25" />
+        <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout-land/fragment_crime_list.xml" value="0.33" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/fragment_crime_detail.xml" value="0.2752808988764045" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/fragment_crime_list.xml" value="0.22" />
