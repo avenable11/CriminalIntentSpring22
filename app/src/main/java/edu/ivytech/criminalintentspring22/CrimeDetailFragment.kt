@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import edu.ivytech.criminalintentspring22.database.Crime
+import edu.ivytech.criminalintentspring22.database.CrimeList
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeDetailBinding
 import java.util.*
 
