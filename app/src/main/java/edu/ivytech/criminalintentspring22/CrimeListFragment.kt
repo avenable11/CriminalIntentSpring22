@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,10 @@ class CrimeListFragment : Fragment() {
     private var _binding: FragmentCrimeListBinding? = null
     private val binding get() = _binding!!
     private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
+
+    private val crimeListVM : CrimeListViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,11 +50,13 @@ class CrimeListFragment : Fragment() {
                 view.findNavController().navigate(R.id.action_List_to_Detail)
             }
         }
-        setupRecyclerView()
+        crimeListVM.crimesLiveData.observe(viewLifecycleOwner) {
+            crimes -> setupRecyclerView(crimes)
+        }
     }
 
-    private fun setupRecyclerView() {
-        adapter = CrimeAdapter(CrimeList.ITEMS)
+    private fun setupRecyclerView(crimes : List<Crime>) {
+        adapter = CrimeAdapter(crimes)
         binding.crimeList.adapter = adapter
     }
 

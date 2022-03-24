@@ -10,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import edu.ivytech.criminalintentspring22.database.Crime
-import edu.ivytech.criminalintentspring22.database.CrimeList
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeDetailBinding
 import java.util.*
 
@@ -19,12 +19,16 @@ class CrimeDetailFragment : Fragment() {
     private var _binding: FragmentCrimeDetailBinding? = null
     private val binding get() = _binding!!
     private var item : Crime? = null
-
+    private var isNew : Boolean = true
+    private val crimeDetailVM : CrimeDetailViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let{
             if(it.containsKey(ARG_ITEM_ID)) {
-                item = CrimeList.ITEM_MAP[it.getSerializable(ARG_ITEM_ID) as UUID]
+                val crimeId = it.getSerializable(ARG_ITEM_ID) as UUID
+                crimeDetailVM.loadCrime(crimeId)
             }
         }
     }
@@ -32,8 +36,9 @@ class CrimeDetailFragment : Fragment() {
         if(event.action == DragEvent.ACTION_DROP) {
             val clipDataItem:ClipData.Item = event.clipData.getItemAt(0)
             val dragData = clipDataItem.text
-            item = CrimeList.ITEM_MAP[UUID.fromString(dragData.toString())]
-            updateUI()
+            val crimeId = UUID.fromString(dragData.toString())
+            crimeDetailVM.loadCrime(crimeId)
+
         }
         true
     }
@@ -48,6 +53,13 @@ class CrimeDetailFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        crimeDetailVM.crimeLiveData.observe(viewLifecycleOwner) {
+            crime -> item = crime
+            updateUI()
+        }
+    }
     override fun onStart() {
         super.onStart()
         binding.titleEditText.addTextChangedListener(object:TextWatcher{
@@ -60,17 +72,27 @@ class CrimeDetailFragment : Fragment() {
         binding.solvedSwitch.setOnCheckedChangeListener { buttonView, isChecked -> item?.isSolved = isChecked  }
     }
 
+    override fun onStop() {
+        super.onStop()
+        if(isNew && !binding.titleEditText.text.isNullOrEmpty()) {
+            crimeDetailVM.addCrime(item!!)
+        } else if(!isNew) {
+            crimeDetailVM.saveCrime(item!!)
+        }
+
+    }
+
     private fun updateUI()
     {
         if(item != null){
             binding.toolbarLayout?.title = "Edit Crime"
             binding.titleEditText.setText(item?.title)
             binding.solvedSwitch.isChecked = item?.isSolved == true
+            isNew = false
         } else {
             binding.toolbarLayout?.title = "New Crime"
             item = Crime()
-            CrimeList.ITEM_MAP[item!!.id] = item!!
-            CrimeList.ITEMS.add(item!!)
+
         }
         binding.dateButton.text = DateFormat.format("EEEE, MMM dd, yyyy",item?.date)
 
