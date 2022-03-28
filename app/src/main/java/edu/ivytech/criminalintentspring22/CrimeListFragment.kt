@@ -16,7 +16,6 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.ivytech.criminalintentspring22.database.Crime
-import edu.ivytech.criminalintentspring22.database.CrimeList
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeListBinding
 import edu.ivytech.criminalintentspring22.databinding.ListItemCrimeBinding
 
