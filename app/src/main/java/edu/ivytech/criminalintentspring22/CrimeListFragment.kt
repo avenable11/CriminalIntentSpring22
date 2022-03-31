@@ -2,30 +2,41 @@ package edu.ivytech.criminalintentspring22
 
 import android.content.ClipData
 import android.content.ClipDescription
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.ContextMenu
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.auth.AuthUI
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeListBinding
 import edu.ivytech.criminalintentspring22.databinding.ListItemCrimeBinding
+import edu.ivytech.criminalintentspring22.firestore.CrimeUser
+import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
 
 class CrimeListFragment : Fragment() {
     private var _binding: FragmentCrimeListBinding? = null
     private val binding get() = _binding!!
     private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
+    private var user : CrimeUser? = null
 
     private val crimeListVM : CrimeListViewModel by lazy {
         ViewModelProvider(requireActivity()).get(CrimeListViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+        FirestoreUtil.loadUserData().addOnSuccessListener {
+                document ->
+            user = document.toObject(CrimeUser::class.java)
+        }
     }
 
     override fun onCreateView(
@@ -57,6 +68,47 @@ class CrimeListFragment : Fragment() {
     private fun setupRecyclerView(crimes : List<Crime>) {
         adapter = CrimeAdapter(crimes)
         binding.crimeList.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        if(FirestoreUtil.getCurrentUser() != null)
+        {
+            menu.add("Sync Crimes")
+            menu.add("Edit Profile")
+            menu.add("Sign Out")
+        } else {
+            menu.add("Sign In")
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.title) {
+            "Sync Crimes" -> {
+                CrimeRepository.get().syncCrimes(user!!)
+                true
+            }
+            "Edit Profile" ->{
+                startActivity(Intent(requireContext(), UserProfileActivity::class.java))
+                true
+            }
+            "Sign Out"->{
+                AuthUI.getInstance()
+                    .signOut(requireContext())
+                    .addOnCompleteListener { Toast.makeText(requireContext(), "You have been signed out", Toast.LENGTH_LONG).show() }
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+                requireActivity().finish()
+                true
+            }
+            "Sign In" -> {
+                startActivity(Intent(requireContext(), FirebaseAuthActivity::class.java))
+                true
+            }
+            else -> return super.onOptionsItemSelected(item)
+
+
+        }
+
     }
 
     private inner class CrimeHolder (val itemBinding:ListItemCrimeBinding) :
