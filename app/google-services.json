@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "209728084608",
+    "project_id": "criminal-intent-spring-22",
+    "storage_bucket": "criminal-intent-spring-22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209728084608:android:41352290c9f5f85fa92465",
+        "android_client_info": {
+          "package_name": "edu.ivytech.criminalintentspring22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209728084608-5ceuh1qfmt8a9o5h1caji2bft7mk1vsu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ivytech.criminalintentspring22",
+            "certificate_hash": "00a09db353334bb09d51eb16843a55b58e889b29"
+          }
+        },
+        {
+          "client_id": "209728084608-hqhi667anstms49gj5akjd9ekh6u611b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwpH11Y_FCYSdI1MMep0um0Lz289D1kMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209728084608-hqhi667anstms49gj5akjd9ekh6u611b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

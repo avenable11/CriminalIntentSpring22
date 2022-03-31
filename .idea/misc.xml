@@ -5,7 +5,9 @@
       <map>
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout-land/fragment_crime_detail.xml" value="0.25" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout-land/fragment_crime_list.xml" value="0.33" />
+        <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/activity_firebase_auth.xml" value="0.19655797101449277" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/activity_user_profile.xml" value="0.33" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/fragment_crime_detail.xml" value="0.2752808988764045" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/fragment_crime_list.xml" value="0.22" />
         <entry key="..\:/Users/avenable/AndroidStudioProjects/CriminalIntentSpring22/app/src/main/res/layout/list_item_crime.xml" value="0.5" />

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeDetailBinding
@@ -20,9 +21,7 @@ class CrimeDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var item : Crime? = null
     private var isNew : Boolean = true
-    private val crimeDetailVM : CrimeDetailViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(CrimeDetailViewModel::class.java)
-    }
+    private val crimeDetailVM : CrimeDetailViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let{

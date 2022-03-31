@@ -4,4 +4,7 @@
     <string name="title_hint">Describe the Crime</string>
     <string name="details">Details</string>
     <string name="solved">Solved</string>
+    <string name="name_hint">Name</string>
+    <string name="email_hint">Email</string>
+    <string name="save_btn_text">Save Profile</string>
 </resources>
