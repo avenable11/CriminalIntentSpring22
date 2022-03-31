@@ -22,4 +22,7 @@ interface CrimeDao {
 
     @Update
     fun updateCrime(crime : Crime)
+
+    @Query("select * from crime")
+    fun getCrimesForFirebase() : List<Crime>
 }

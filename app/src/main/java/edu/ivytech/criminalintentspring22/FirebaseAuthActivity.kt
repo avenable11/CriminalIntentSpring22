@@ -7,6 +7,8 @@ import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import edu.ivytech.criminalintentspring22.firestore.CrimeUser
+import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
 
 class FirebaseAuthActivity : AppCompatActivity() {
     private val signInLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) {
@@ -32,17 +34,33 @@ class FirebaseAuthActivity : AppCompatActivity() {
         signInLauncher.launch(signInIntent)
     }
 
-    private fun onSignInResult(res: FirebaseAuthUIAuthenticationResult?) {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+    private fun onSignInResult(res: FirebaseAuthUIAuthenticationResult) {
+        val response = res.idpResponse
+        if(res.resultCode == RESULT_OK) {
+           val user = FirestoreUtil.getCurrentUser()
+           val email = user!!.email!!
+           if(response!!.isNewUser) {
+               val newUser = CrimeUser(user.uid, "", email)
+               FirestoreUtil.registerUser(newUser).addOnSuccessListener {
+                   Toast.makeText(this,
+                       "Welcome ${user.email},you have successfully registered.",
+                       Toast.LENGTH_LONG
+                   ).show()
+                   startActivity(Intent(this, UserProfileActivity::class.java))
+                   finish()
+               }
+           } else {
+               startActivity(Intent(this, MainActivity::class.java))
+               finish()
+           }
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        AuthUI.getInstance()
-            .signOut(this)
-            .addOnCompleteListener {
-                Toast.makeText(this, "You have been signed out", Toast.LENGTH_LONG).show()
-            }
+
     }
 }

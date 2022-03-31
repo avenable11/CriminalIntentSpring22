@@ -1,12 +1,17 @@
 package edu.ivytech.criminalintentspring22
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.database.CrimeDatabase
+import edu.ivytech.criminalintentspring22.firestore.CrimeUser
+import edu.ivytech.criminalintentspring22.firestore.FirestoreCrime
+import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
 import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.HashMap
 
 private const val DATABASE_NAME = "crime_database.db"
 class CrimeRepository private constructor(context : Context) {
@@ -30,6 +35,32 @@ class CrimeRepository private constructor(context : Context) {
     }
     fun updateCrime(crime : Crime) {
         executor.execute { crimeDao.updateCrime(crime) }
+    }
+
+    fun syncCrimes(userInfo : CrimeUser) {
+        executor.execute {
+            val crimes = crimeDao.getCrimesForFirebase()
+            val crimeMap : MutableMap<String, Crime> = HashMap()
+            for(c in crimes){
+                crimeMap[c.id.toString()] = c
+            }
+            FirestoreUtil.saveUserCrimes(crimes, userInfo)
+            FirestoreUtil.getAllCrimes().addOnSuccessListener {
+                documents ->
+                for(document in documents) {
+                    val fsCrime = document.toObject(FirestoreCrime::class.java)
+                    if(!crimeMap.containsKey(fsCrime.id)) {
+                        val crime = Crime(UUID.fromString(fsCrime.id), fsCrime.title, fsCrime.date, fsCrime.solved)
+                        executor.execute {
+                            crimeDao.addCrime(crime)
+                        }
+                        Log.i("Crime Repo Sync", "Added Crime From Firestore ${crime.title}")
+                    }
+                }
+
+            }
+
+        }
     }
 
 
