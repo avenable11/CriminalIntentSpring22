@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import edu.ivytech.criminalintentspring22.database.Crime
+import java.io.File
 import java.util.*
 
 class CrimeDetailViewModel : ViewModel() {
@@ -24,6 +25,9 @@ class CrimeDetailViewModel : ViewModel() {
 
     fun saveCrime(crime: Crime) {
         crimeRepo.updateCrime(crime)
+    }
+    fun getPhotoFile(crime:Crime): File {
+        return crimeRepo.getPhotoFile(crime)
     }
 
 }

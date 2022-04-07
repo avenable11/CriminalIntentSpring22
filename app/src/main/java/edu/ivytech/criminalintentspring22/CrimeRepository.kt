@@ -11,6 +11,7 @@ import edu.ivytech.criminalintentspring22.database.migrations_2_3
 import edu.ivytech.criminalintentspring22.firestore.CrimeUser
 import edu.ivytech.criminalintentspring22.firestore.FirestoreCrime
 import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
+import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.collections.HashMap
@@ -33,6 +34,7 @@ class CrimeRepository private constructor(context : Context) {
         .build()
     private val crimeDao = database.crimeDao()
     private val executor = Executors.newSingleThreadExecutor()
+    private val filesDir = context.applicationContext.filesDir
     fun getAllCrimes() : LiveData<List<Crime>> = crimeDao.getAllCrimes()
     fun getCrime(id : UUID) : LiveData<Crime> = crimeDao.getCrime(id)
     fun addCrime(crime : Crime) {
@@ -67,6 +69,6 @@ class CrimeRepository private constructor(context : Context) {
 
         }
     }
-
+    fun getPhotoFile(crime:Crime): File = File(filesDir, crime.photoFileName)
 
 }
