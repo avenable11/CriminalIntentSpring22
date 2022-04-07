@@ -7,6 +7,7 @@ import androidx.room.Room
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.database.CrimeDatabase
 import edu.ivytech.criminalintentspring22.database.migrations_1_2
+import edu.ivytech.criminalintentspring22.database.migrations_2_3
 import edu.ivytech.criminalintentspring22.firestore.CrimeUser
 import edu.ivytech.criminalintentspring22.firestore.FirestoreCrime
 import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
@@ -28,6 +29,7 @@ class CrimeRepository private constructor(context : Context) {
     private val database : CrimeDatabase = Room.databaseBuilder(context,
         CrimeDatabase::class.java, DATABASE_NAME)
         .addMigrations(migrations_1_2)
+        .addMigrations(migrations_2_3)
         .build()
     private val crimeDao = database.crimeDao()
     private val executor = Executors.newSingleThreadExecutor()
