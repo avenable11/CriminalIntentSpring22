@@ -1,6 +1,7 @@
 package edu.ivytech.criminalintentspring22
 
 import android.content.ClipData
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.datepicker.MaterialDatePicker
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.databinding.FragmentCrimeDetailBinding
 import java.util.*
@@ -69,6 +71,28 @@ class CrimeDetailFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
         binding.solvedSwitch.setOnCheckedChangeListener { buttonView, isChecked -> item?.isSolved = isChecked  }
+        binding.dateButton.setOnClickListener {
+            val datePicker: MaterialDatePicker<Long> = MaterialDatePicker
+                .Builder
+                .datePicker()
+                .setTitleText(R.string.date_picker_title)
+                .setSelection(item?.date?.time)
+                .build()
+            datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+            datePicker.addOnPositiveButtonClickListener {
+                cDate ->
+                    item!!.date = Date(cDate)
+                    binding.dateButton.text = DateFormat.format("EEEE, MMM dd, yyyy", item?.date)
+            }
+        }
+        binding.shareBtn?.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
+            val chooserIntent = Intent.createChooser(intent, getString(R.string.send_report))
+            startActivity(chooserIntent)
+        }
     }
 
     override fun onStop() {
@@ -88,6 +112,12 @@ class CrimeDetailFragment : Fragment() {
             binding.titleEditText.setText(item?.title)
             binding.solvedSwitch.isChecked = item?.isSolved == true
             isNew = false
+            if(!item!!.canEdit)
+            {
+                binding.titleEditText.isEnabled = false
+                binding.solvedSwitch.isEnabled = false
+                binding.dateButton.isEnabled = false
+            }
         } else {
             binding.toolbarLayout?.title = "New Crime"
             item = Crime()
@@ -95,6 +125,16 @@ class CrimeDetailFragment : Fragment() {
         }
         binding.dateButton.text = DateFormat.format("EEEE, MMM dd, yyyy",item?.date)
 
+    }
+
+    private fun getCrimeReport():String{
+        val solvedString = if(item!!.isSolved) {
+            getString(R.string.crime_report_solved)
+        } else {
+            getString(R.string.crime_report_unsolved)
+        }
+        val dateString = DateFormat.format("EEEE, MMM dd, yyyy", item!!.date).toString()
+        return getString(R.string.crime_report, item!!.title, dateString, solvedString, getString(R.string.crime_report_no_suspect))
     }
     companion object {
         const val ARG_ITEM_ID = "item_id"

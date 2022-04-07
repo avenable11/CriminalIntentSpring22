@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import edu.ivytech.criminalintentspring22.database.Crime
 import edu.ivytech.criminalintentspring22.database.CrimeDatabase
+import edu.ivytech.criminalintentspring22.database.migrations_1_2
 import edu.ivytech.criminalintentspring22.firestore.CrimeUser
 import edu.ivytech.criminalintentspring22.firestore.FirestoreCrime
 import edu.ivytech.criminalintentspring22.firestore.FirestoreUtil
@@ -25,7 +26,9 @@ class CrimeRepository private constructor(context : Context) {
         }
     }
     private val database : CrimeDatabase = Room.databaseBuilder(context,
-        CrimeDatabase::class.java, DATABASE_NAME).build()
+        CrimeDatabase::class.java, DATABASE_NAME)
+        .addMigrations(migrations_1_2)
+        .build()
     private val crimeDao = database.crimeDao()
     private val executor = Executors.newSingleThreadExecutor()
     fun getAllCrimes() : LiveData<List<Crime>> = crimeDao.getAllCrimes()
@@ -50,7 +53,7 @@ class CrimeRepository private constructor(context : Context) {
                 for(document in documents) {
                     val fsCrime = document.toObject(FirestoreCrime::class.java)
                     if(!crimeMap.containsKey(fsCrime.id)) {
-                        val crime = Crime(UUID.fromString(fsCrime.id), fsCrime.title, fsCrime.date, fsCrime.solved)
+                        val crime = Crime(UUID.fromString(fsCrime.id), fsCrime.title, fsCrime.date, fsCrime.solved, fsCrime.userID == FirestoreUtil.getCurrentUser()!!.uid)
                         executor.execute {
                             crimeDao.addCrime(crime)
                         }
